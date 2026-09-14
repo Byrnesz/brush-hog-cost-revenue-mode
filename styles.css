@@ -1,0 +1,26 @@
+/* Additional custom styles can go here */
+/* This file is optional - the HTML already includes all necessary styles */
+
+/* Example: Custom color scheme */
+:root {
+    --primary-color: #1a5f4f;
+    --secondary-color: #2ecc71;
+    --accent-color: #3498db;
+    --background-color: #f0f2f5;
+}
+
+/* Example: Print styles */
+@media print {
+    .no-print {
+        display: none;
+    }
+    
+    body {
+        background: white;
+    }
+    
+    .container {
+        box-shadow: none;
+        padding: 0;
+    }
+}
