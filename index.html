@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brush Hog Cost & Revenue Model</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a5f4f;
+            text-align: center;
+            border-bottom: 3px solid #2ecc71;
+            padding-bottom: 15px;
+        }
+        h2 {
+            color: #2c3e50;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+            margin-top: 30px;
+        }
+        .hero {
+            background: linear-gradient(135deg, #2ecc71, #3498db);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: linear-gradient(135deg, #2ecc71, #3498db);
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e9f7fe;
+        }
+        .input-cell {
+            background-color: #fffde7;
+            font-weight: bold;
+            color: #e67e22;
+        }
+        .formula-cell {
+            background-color: #e3f2fd;
+            font-family: 'Courier New', monospace;
+            color: #1a5f4f;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .notes {
+            font-size: 0.85em;
+            color: #666;
+            font-style: italic;
+        }
+        .card {
+            border-left: 4px solid #2ecc71;
+            padding: 15px;
+            margin: 15px 0;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .risk-card {
+            border-left: 4px solid #e74c3c;
+        }
+        .example-card {
+            border-left: 4px solid #3498db;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            margin: 10px 5px;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            table {
+                font-size: 12px;
+            }
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🚜 Brush Hog Cost & Revenue Model</h1>
+            <p><strong>Customized for 40HP Tractor + 5' Brush Hog</strong></p>
+            <p>Complete financial estimator with risk rules, travel adjustments, and dual quoting (per-acre + hourly)</p>
+        </div>
+
+        <div class="grid-container">
+            <div class="feature-box">
+                <div class="feature-icon">💰</div>
+                <h3>Fixed Costs</h3>
+                <p>Annual depreciation, insurance, and overhead calculations</p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">⚙️</div>
+                <h3>Variable Costs</h3>
+                <p>Fuel, maintenance, and labor per hour with dynamic formulas</p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">📊</div>
+                <h3>Dual Quoting</h3>
+                <p>Auto-switches between per-acre and hourly for small lots</p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">⚠️</div>
+                <h3>Risk Rules</h3>
+                <p>Obstacle multipliers, down-time clauses, and mobilization fees</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 Quick Start Guide</h2>
+            <ol>
+                <li><strong>Copy the spreadsheet table below</strong> into Excel or Google Sheets</li>
+                <li><strong>Replace highlighted values</strong> (green cells) with your actual numbers</li>
+                <li><strong>Formulas auto-calculate</strong> - no manual math required</li>
+                <li><strong>Test scenarios</strong> by adjusting project size, travel distance, and risk factors</li>
+            </ol>
+            <div style="text-align: center; margin: 20px 0;">
+                <a href="#spreadsheet" class="btn">View Spreadsheet</a>
+                <a href="#risk-rules" class="btn btn-secondary">View Risk Rules</a>
+            </div>
+        </div>
+
+        <div class="section" id="spreadsheet">
+            <h2>📊 Complete Spreadsheet Model</h2>
+            <p><strong>Copy this entire table into cell A1 of Excel or Google Sheets</strong></p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2"><strong>Section</strong></th>
+                        <th rowspan="2"><strong>Metric</strong></th>
+                        <th colspan="2" style="text-align: center;"><strong>Formulas & Inputs</strong></th>
+                    </tr>
+                    <tr>
+                        <th><strong>Value/Formula</strong></th>
+                        <th><strong>Notes</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- FIXED COSTS -->
+                    <tr>
+                        <td rowspan="10" style="vertical-align: top;"><strong>💰 CAPITAL & FIXED COSTS<br>(Annual)</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Equipment Purchase Price</td>
+                        <td class="input-cell">$35,000</td>
+                        <td class="notes">40HP tractor + 5' brush hog</td>
+                    </tr>
+                    <tr>
+                        <td>Salvage Value</td>
+                        <td class="input-cell">$5,000</td>
+                        <td class="notes">Estimated resale value</td>
+                    </tr>
+                    <tr>
+                        <td>Useful Life (Years)</td>
+                        <td class="input-cell">10</td>
+                        <td class="notes">Expected asset lifespan</td>
+                    </tr>
+                    <tr>
+                        <td>Annual Depreciation</td>
+                        <td class="formula-cell"><code>=($B$3-$B$4)/$B$5</code></td>
+                        <td class="notes">Straight-line depreciation</td>
+                    </tr>
+                    <tr>
+                        <td>Annual Commercial Insurance</td>
+                        <td class="input-cell">$900</td>
+                        <td class="notes">Liability protection</td>
+                    </tr>
+                    <tr>
+                        <td>Business Admin & Marketing</td>
+                        <td class="input-cell">$500</td>
+                        <td class="notes">Software, phone, advertising</td>
+                    </tr>
+                    <tr>
+                        <td>Annual License/Registration</td>
+                        <td class="input-cell">$200</td>
+                        <td class="notes">Equipment registration fees</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Annual Fixed Costs</strong></td>
+                        <td class="formula-cell"><code>=SUM($B$6:$B$9)</code></td>
+                        <td class="notes">Total overhead per year</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fixed Cost per Hour</strong></td>
+                        <td class="formula-cell"><code>=($B$10/100)</code></td>
+                        <td class="notes">Assuming 100 hours/year</td>
+                    </tr>
+
+                    <!-- VARIABLE COSTS -->
+                    <tr>
+                        <td rowspan="11" style="vertical-align: top;"><strong>⚙️ VARIABLE OPERATING COSTS<br>(Per Hour)</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Tractor Horsepower</td>
+                        <td class="input-cell">40</td>
+                        <td class="notes">Your tractor HP</td>
+                    </tr>
+                    <tr>
+                        <td>Fuel Consumption (Gal/HP/Hour)</td>
+                        <td class="input-cell">0.044</td>
+                        <td class="notes">Standard diesel consumption</td>
+                    </tr>
+                    <tr>
+                        <td>Tractor Fuel Consumption (Gal/Hour)</td>
+                        <td class="formula-cell"><code>=($B$13*$B$14)</code></td>
+                        <td class="notes"><span class="highlight">1.76 Gal/hr</span> for 40HP</td>
+                    </tr>
+                    <tr>
+                        <td>Fuel Price (per Gallon)</td>
+                        <td class="input-cell">$3.50</td>
+                        <td class="notes">Local diesel/gas pricing</td>
+                    </tr>
+                    <tr>
+                        <td>Hourly Fuel Cost</td>
+                        <td class="formula-cell"><code>=($B$15*$B$16)</code></td>
+                        <td class="notes">Dynamic fuel cost</td>
+                    </tr>
+                    <tr>
+                        <td>Maintenance Allocation</td>
+                        <td class="input-cell">$8.50</td>
+                        <td class="notes">Blades, pins, lubricants, hydraulic wear</td>
+                    </tr>
+                    <tr>
+                        <td>Operator Labor Rate</td>
+                        <td class="input-cell">$25.00</td>
+                        <td class="notes">Market rate for equipment operators</td>
+                    </tr>
+                    <tr>
+                        <td>Equipment Wear Factor</td>
+                        <td class="input-cell">1.2</td>
+                        <td class="notes">Multiplier for brush hogging vs. standard mowing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Variable Cost per Hour</strong></td>
+                        <td class="formula-cell"><code>=($B$17+($B$18*$B$20)+($B$19*$B$20))</code></td>
+                        <td class="notes">Combined hourly operating cost</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Cost per Hour</strong></td>
+                        <td class="formula-cell"><code>=($B$11+$B$21)</code></td>
+                        <td class="notes">Fixed + Variable costs</td>
+                    </tr>
+
+                    <!-- JOB SIMULATOR -->
+                    <tr>
+                        <td rowspan="16" style="vertical-align: top;"><strong>📈 JOB SIMULATOR</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Project Size (Acres)</td>
+                        <td class="input-cell">5</td>
+                        <td class="notes">Adjust per job</td>
+                    </tr>
+                    <tr>
+                        <td>Cutter Width</td>
+                        <td class="input-cell">5</td>
+                        <td class="notes">Feet</td>
+                    </tr>
+                    <tr>
+                        <td>Cutter Efficiency (Acres/Hour)</td>
+                        <td class="formula-cell"><code>=($B$24*0.2)</code></td>
+                        <td class="notes"><span class="highlight">1.0 Acre/hr</span> for 5' cutter</td>
+                    </tr>
+                    <tr>
+                        <td>Total Project Time (Hours)</td>
+                        <td class="formula-cell"><code>=($B$23/$B$25)</code></td>
+                        <td class="notes">Calculated field time</td>
+                    </tr>
+                    <tr>
+                        <td>Total Variable Cost</td>
+                        <td class="formula-cell"><code>=($B$26*$B$21)</code></td>
+                        <td class="notes">Operational cost for job</td>
+                    </tr>
+                    <tr>
+                        <td>Fixed Cost Allocation</td>
+                        <td class="formula-cell"><code>=($B$11*$B$26)</code></td>
+                        <td class="notes">Portion of annual fixed costs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Job Cost</strong></td>
+                        <td class="formula-cell"><code>=($B$27+$B$28)</code></td>
+                        <td class="notes">All costs for this job</td>
+                    </tr>
+
+                    <!-- PRICING -->
+                    <tr>
+                        <td>Base Rate (Per Acre)</td>
+                        <td class="input-cell">$120</td>
+                        <td class="notes">Standard rate for open fields</td>
+                    </tr>
+                    <tr>
+                        <td>Base Rate (Per Hour)</td>
+                        <td class="input-cell">$100</td>
+                        <td class="notes">Alternative for small jobs</td>
+                    </tr>
+                    <tr>
+                        <td>Minimum Hours for Small Lots</td>
+                        <td class="input-cell">2</td>
+                        <td class="notes">Applies to jobs < 2 acres</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gross Revenue (Per Acre)</strong></td>
+                        <td class="formula-cell"><code>=($B$23*$B$30)</code></td>
+                        <td class="notes">If quoting per acre</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gross Revenue (Hourly)</strong></td>
+                        <td class="formula-cell"><code>=IF($B$23<2,MAX($B$26,$B$32)*$B$31,$B$26*$B$31)</code></td>
+                        <td class="notes">Uses minimum hours for small lots</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Final Revenue</strong></td>
+                        <td class="formula-cell"><code>=IF($B$23>=2,$B$33,$B$34)</code></td>
+                        <td class="notes">Auto-selects per-acre or hourly</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Net Job Profit</strong></td>
+                        <td class="formula-cell"><code>=($B$35-$B$29)</code></td>
+                        <td class="notes"><span class="highlight">Your profit for this job</span></td>
+                    </tr>
+
+                    <!-- TRAVEL -->
+                    <tr>
+                        <td rowspan="5" style="vertical-align: top;"><strong>🚚 TRAVEL ADJUSTMENTS</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Travel Distance (Miles)</td>
+                        <td class="input-cell">5</td>
+                        <td class="notes">One-way distance to job site</td>
+                    </tr>
+                    <tr>
+                        <td>Round-Trip Distance</td>
+                        <td class="formula-cell"><code>=($B$38*2)</code></td>
+                        <td class="notes">Total travel distance</td>
+                    </tr>
+                    <tr>
+                        <td>Travel Time (Hours)</td>
+                        <td class="formula-cell"><code>=($B$39/40)</code></td>
+                        <td class="notes">Assuming 40 mph average</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Show-Up Fee</strong></td>
+                        <td class="formula-cell"><code>=IF($B$38<=5,175,IF($B$38<=10,200,IF($B$38<=15,225,250)))</code></td>
+                        <td class="notes">Scales: $175(5mi), $200(10mi), $225(15mi), $250(20mi)</td>
+                    </tr>
+
+                    <!-- RISK RULES -->
+                    <tr>
+                        <td rowspan="8" style="vertical-align: top;"><strong>⚠️ RISK RULES & ADJUSTMENTS</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Terrain Type</td>
+                        <td class="input-cell">Open Field</td>
+                        <td class="notes">Select: Open Field / Slopes / Thick Brush / Rocks</td>
+                    </tr>
+                    <tr>
+                        <td>Obstacle Multiplier</td>
+                        <td class="formula-cell"><code>=IF($B$42="Open Field",1,IF($B$42="Slopes",1.2,IF($B$42="Thick Brush",1.5,1.8)))</code></td>
+                        <td class="notes">1.0 / 1.2 / 1.5 / 1.8</td>
+                    </tr>
+                    <tr>
+                        <td>Down-Time Clause Active?</td>
+                        <td class="input-cell">1</td>
+                        <td class="notes">1 = Yes, 0 = No</td>
+                    </tr>
+                    <tr>
+                        <td>Down-Time Hours</td>
+                        <td class="input-cell">0.5</td>
+                        <td class="notes">Estimated delay time</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Adjusted Hourly Rate</strong></td>
+                        <td class="formula-cell"><code>=($B$31*$B$43*(1+$B$44))</code></td>
+                        <td class="notes">Includes risk multipliers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Adjusted Revenue (Per Acre)</strong></td>
+                        <td class="formula-cell"><code>=($B$33*$B$43)</code></td>
+                        <td class="notes">Risk-adjusted per-acre revenue</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Adjusted Revenue (Hourly)</strong></td>
+                        <td class="formula-cell"><code>=($B$34*$B$43)</code></td>
+                        <td class="notes">Risk-adjusted hourly revenue</td>
+                    </tr>
+
+                    <!-- FINAL SUMMARY -->
+                    <tr>
+                        <td rowspan="5" style="vertical-align: top;"><strong>📌 FINAL SUMMARY</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Final Revenue</strong></td>
+                        <td class="formula-cell"><code>=($B$35+$B$41)</code></td>
+                        <td class="notes">Revenue + Show-Up Fee</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Final Cost</strong></td>
+                        <td class="formula-cell"><code>=($B$29+$B$41)</code></td>
+                        <td class="notes">Job costs + Show-Up Fee</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Final Net Profit</strong></td>
+                        <td class="formula-cell"><code>=($B$48-$B$49)</code></td>
+                        <td class="notes"><span class="highlight">💰 YOUR FINAL PROFIT</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Profit Margin</strong></td>
+                        <td class="formula-cell"><code>=IF($B$48>0,($B$50/$B$48)*100,0)</code></td>
+                        <td class="notes">Percentage margin</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="card">
+                <h3>📋 Copy Instructions:</h3>
+                <ol>
+                    <li>Select the entire table above (click and drag)</li>
+                    <li>Copy (Ctrl+C or Cmd+C)</li>
+                    <li>Open Excel or Google Sheets</li>
+                    <li>Paste into cell <strong>A1</strong></li>
+                    <li>All formulas will work automatically!</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section card risk-card" id="risk-rules">
+            <h2>⚠️ Risk Rules Explained</h2>
+            
+            <div class="grid-container">
+                <div class="feature-box">
+                    <h3>🚜 Mobilization Fee</h3>
+                    <p><strong>Flat show-up fee</strong> that scales with distance:</p>
+                    <ul>
+                        <li><strong>5 miles:</strong> $175</li>
+                        <li><strong>10 miles:</strong> $200</li>
+                        <li><strong>15 miles:</strong> $225</li>
+                        <li><strong>20+ miles:</strong> $250</li>
+                    </ul>
+                    <p><em>Covers transit time and fuel costs for distant jobs</em></p>
+                </div>
+                
+                <div class="feature-box">
+                    <h3>🪨 Obstacle Multiplier</h3>
+                    <p><strong>Adjusts revenue</strong> based on terrain difficulty:</p>
+                    <ul>
+                        <li><strong>Open Field:</strong> 1.0x (no adjustment)</li>
+                        <li><strong>Slopes:</strong> 1.2x (+20%)</li>
+                        <li><strong>Thick Brush:</strong> 1.5x (+50%)</li>
+                        <li><strong>Rocks/Heavy Debris:</strong> 1.8x (+80%)</li>
+                    </ul>
+                    <p><em>Compensates for increased wear and slower progress</em></p>
+                </div>
+                
+                <div class="feature-box">
+                    <h3>⏳ Down-Time Clause</h3>
+                    <p><strong>Billing continues</strong> during delays when enabled:</p>
+                    <ul>
+                        <li>Clearing barbed wire</li>
+                        <li>Replacing shattered shear pins</li>
+                        <li>Removing large obstacles</li>
+                        <li>Equipment repairs</li>
+                    </ul>
+                    <p><em>Set to <strong>1</strong> to enable, <strong>0</strong> to disable</em></p>
+                </div>
+                
+                <div class="feature-box">
+                    <h3>⏱️ Minimum Charge</h3>
+                    <p><strong>2-hour minimum</strong> for jobs under 2 acres:</p>
+                    <ul>
+                        <li>Prevents losses on small lots</li>
+                        <li>Covers setup and breakdown time</li>
+                        <li>Auto-applies for < 2 acre jobs</li>
+                    </ul>
+                    <p><em>Adjustable in the spreadsheet</em></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section card example-card">
+            <h2>🎯 Example Scenarios</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th><strong>Scenario</strong></th>
+                        <th><strong>Project Size</strong></th>
+                        <th><strong>Travel</strong></th>
+                        <th><strong>Terrain</strong></th>
+                        <th><strong>Revenue</strong></th>
+                        <th><strong>Cost</strong></th>
+                        <th><strong>Profit</strong></th>
+                        <th><strong>Margin</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Open Field</strong></td>
+                        <td>5 Acres</td>
+                        <td>5 Miles</td>
+                        <td>Open Field</td>
+                        <td>$775</td>
+                        <td>$320</td>
+                        <td><strong>$455</strong></td>
+                        <td>58.7%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Thick Brush</strong></td>
+                        <td>2 Acres</td>
+                        <td>10 Miles</td>
+                        <td>Thick Brush</td>
+                        <td>$420</td>
+                        <td>$240</td>
+                        <td><strong>$180</strong></td>
+                        <td>42.9%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Small Lot</strong></td>
+                        <td>1 Acre</td>
+                        <td>5 Miles</td>
+                        <td>Open Field</td>
+                        <td>$275</td>
+                        <td>$175</td>
+                        <td><strong>$100</strong></td>
+                        <td>36.4%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rocky Terrain</strong></td>
+                        <td>3 Acres</td>
+                        <td>15 Miles</td>
+                        <td>Rocks</td>
+                        <td>$705</td>
+                        <td>$400</td>
+                        <td><strong>$305</strong></td>
+                        <td>43.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p><em>💡 These are estimated results. Actual numbers will vary based on your inputs.</em></p>
+        </div>
+
+        <div class="section">
+            <h2>💡 Pro Tips</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <h3>🔥 For Maximum Profitability</h3>
+                    <ul>
+                        <li><strong>Charge premium rates</strong> for difficult terrain (use obstacle multiplier)</li>
+                        <li><strong>Always include show-up fees</strong> for jobs >5 miles away</li>
+                        <li><strong>Use hourly billing</strong> for small lots (<2 acres)</li>
+                        <li><strong>Track actual costs</strong> and adjust your rates accordingly</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>📊 For Accurate Estimates</h3>
+                    <ul>
+                        <li><strong>Measure actual fuel consumption</strong> for your specific equipment</li>
+                        <li><strong>Track maintenance costs</strong> over time to refine your estimates</li>
+                        <li><strong>Adjust for local conditions</strong> (fuel prices, labor rates)</li>
+                        <li><strong>Consider seasonal demand</strong> in your pricing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" style="text-align: center;">
+            <h2>🔗 Additional Resources</h2>
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <a href="https://www.extension.iastate.edu/agdm/crops/html/a3-29.html" class="btn">Iowa State Farm Machinery Cost Calculator</a>
+                <a href="https://www.nrcs.usda.gov/wps/portal/nrcs/detail/national/newsroom/features/?cid=nrcseprd1367244" class="btn btn-secondary">USDA Equipment Cost Resources</a>
+            </div>
+        </div>
+
+        <div class="section" style="text-align: center; background: #e8f5e9; padding: 30px; border-radius: 10px;">
+            <h2>📞 Need Help?</h2>
+            <p><strong>Customization available for:</strong></p>
+            <ul style="list-style-type: none; padding: 0; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <li>Different tractor sizes (25HP-100HP)</li>
+                <li>Various cutter widths (4'-15')</li>
+                <li>Bulk pricing discounts</li>
+                <li>Seasonal rate adjustments</li>
+                <li>Equipment-specific wear rates</li>
+            </ul>
+            <p style="margin-top: 20px;"><em>Contact me to tailor this model to your specific business needs!</em></p>
+        </div>
+
+        <div style="text-align: center; margin: 40px 0; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <p><strong>© 2026 Brush Hog Cost & Revenue Model</strong></p>
+            <p><em>Designed for 40HP Tractor + 5' Brush Hog | Customizable for any setup</em></p>
+        </div>
+    </div>
+
+    <script>
+        // Simple interactivity for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Add hover effects to tables
+            const tables = document.querySelectorAll('table');
+            tables.forEach(table => {
+                table.addEventListener('mouseover', function() {
+                    this.style.boxShadow = '0 0 15px rgba(0,0,0,0.1)';
+                });
+                table.addEventListener('mouseout', function() {
+                    this.style.boxShadow = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
