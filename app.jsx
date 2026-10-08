@@ -61,4 +61,4 @@ function App() {
 
   window.App = App;
   ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-})();
+})();).
