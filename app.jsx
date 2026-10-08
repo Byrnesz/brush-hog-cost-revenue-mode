@@ -20,12 +20,12 @@ function App() {
       {/* Module navigation bar - sits above the calculator's own header */}
       <nav className="bg-gray-900 text-white shadow-lg print:hidden">
         <div className="container mx-auto px-4 py-2 flex gap-2 flex-wrap items-center">
-          <span className="font-bold text-green-400 mr-4">ð Brush Hog Business Suite</span>
+          <span className="font-bold text-green-400 mr-4">Brush Hog Business Suite</span>
           {[
-            { key: "calculator", label: "ð§® Calculator" },
-            { key: "clients", label: "ð¥ Clients" },
-            { key: "quotes", label: "ð Quotes" },
-            { key: "settings", label: "âï¸ Settings" },
+            { key: "calculator", label: "Calculator" },
+            { key: "clients", label: "Clients" },
+            { key: "quotes", label: "Quotes" },
+            { key: "settings", label: "Settings" },
           ].map(({ key, label }) => (
             <button
               key={key}
@@ -58,7 +58,10 @@ function App() {
         </div>
       )}
     </div>
+  );
+}
 
   window.App = App;
   ReactDOM.createRoot(document.getElementById("root")).render(<App />);
 })();
+// end of file
