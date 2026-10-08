@@ -1235,4 +1235,4 @@ const BrushHogCalculator = () => {
   window.formatCurrency = formatCurrency;
   window.formatNumber = formatNumber;
   window.defaultState = defaultState;
-})();).
+})();
