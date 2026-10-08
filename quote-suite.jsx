@@ -107,7 +107,7 @@ const SettingsPage = ({ settings, setSettings }) => {
   return (
     <div className="space-y-6">
       <section className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">ð¢ Business Information</h2>
+        <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">&#x1F3E2; Business Information</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Business Name</label>
@@ -142,7 +142,7 @@ const SettingsPage = ({ settings, setSettings }) => {
       </section>
 
       <section className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">âï¸ Quote Defaults</h2>
+        <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">&#x2699;&#xFE0F; Quote Defaults</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Default Tax Rate (%)</label>
@@ -252,7 +252,7 @@ const ClientsPage = ({ clients, setClients }) => {
       ) : (
         <>
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold text-green-700">ð¥ Clients ({clients.length})</h2>
+            <h2 className="text-xl font-bold text-green-700">&#x1F465; Clients ({clients.length})</h2>
             <button onClick={() => setEditing(blankClient())} className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700">
               + New Client
             </button>
@@ -272,9 +272,9 @@ const ClientsPage = ({ clients, setClients }) => {
                     <h3 className="font-bold text-lg text-green-700">{client.name}</h3>
                     {client.company && <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">{client.company}</span>}
                   </div>
-                  {client.phone && <p className="text-sm text-gray-600">ð {client.phone}</p>}
-                  {client.email && <p className="text-sm text-gray-600">âï¸ {client.email}</p>}
-                  {client.propertyAddress && <p className="text-sm text-gray-500 mt-1">ð {client.propertyAddress}</p>}
+                  {client.phone && <p className="text-sm text-gray-600">&#x1F4DE; {client.phone}</p>}
+                  {client.email && <p className="text-sm text-gray-600">&#x2709;&#xFE0F; {client.email}</p>}
+                  {client.propertyAddress && <p className="text-sm text-gray-500 mt-1">&#x1F4CD; {client.propertyAddress}</p>}
                   {client.notes && <p className="text-xs text-gray-400 mt-2 line-clamp-2">{client.notes}</p>}
                   <div className="flex gap-2 mt-4">
                     <button onClick={() => handleEdit(client)} className="flex-1 px-3 py-1.5 bg-blue-500 text-white rounded text-sm font-semibold hover:bg-blue-600">Edit</button>
@@ -322,7 +322,7 @@ const buildAutoItems = () => {
   // Line 1: Base mowing service
   items.push({
     id: uid(), type: "auto",
-    description: `Brush Hog Mowing â ${s.projectSize} acres, ${s.cutterWidth}' cutter (${perAcre ? "per-acre" : "hourly"} rate)`,
+    description: `Brush Hog Mowing \u2014 ${s.projectSize} acres, ${s.cutterWidth}' cutter (${perAcre ? "per-acre" : "hourly"} rate)`,
     qty: 1, rate: baseRevenue, cost: 0,
     partNumber: "", partDescription: "",
   });
@@ -331,7 +331,7 @@ const buildAutoItems = () => {
   if (upcharge > 0) {
     items.push({
       id: uid(), type: "auto",
-      description: `Terrain adjustment â ${s.terrainType} (${obstacleMultiplier}x factor)`,
+      description: `Terrain adjustment \u2014 ${s.terrainType} (${obstacleMultiplier}x factor)`,
       qty: 1, rate: Math.round(upcharge * 100) / 100, cost: 0,
       partNumber: "", partDescription: "",
     });
@@ -340,7 +340,7 @@ const buildAutoItems = () => {
   if (downTimeMultiplier > 0) {
     items.push({
       id: uid(), type: "auto",
-      description: `Down-time clause â billing continues during delays (+${(downTimeMultiplier * 100).toFixed(0)}%)`,
+      description: `Down-time clause \u2014 billing continues during delays (+${(downTimeMultiplier * 100).toFixed(0)}%)`,
       qty: 1, rate: Math.round(baseRevenue * downTimeMultiplier * 100) / 100, cost: 0,
       partNumber: "", partDescription: "",
     });
@@ -348,7 +348,7 @@ const buildAutoItems = () => {
   // Line 4: Travel / show-up fee
   items.push({
     id: uid(), type: "auto",
-    description: `Travel / mobilization fee â ${s.travelDistance} miles one-way`,
+    description: `Travel / mobilization fee \u2014 ${s.travelDistance} miles one-way`,
     qty: 1, rate: showUpFee, cost: 0,
     partNumber: "", partDescription: "",
   });
@@ -416,7 +416,7 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
   // Edit an existing quote (work on a copy)
   const handleEdit = (quote) => { setEditing({ ...quote }); setPreview(false); };
 
-  // Open a saved quote directly in preview mode â for reference or
+  // Open a saved quote directly in preview mode - for reference or
   // printing a copy when a client requests one
   const handleView = (quote) => { setEditing({ ...quote }); setPreview(true); };
 
@@ -515,14 +515,14 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
 <div class="cols">
   <div>
     <div class="small" style="font-weight:bold;text-transform:uppercase;">Bill To</div>
-    <div style="font-weight:600;">${client ? client.name : "â"}</div>
+    <div style="font-weight:600;">${client ? client.name : "\u2014"}</div>
     ${client && client.company ? `<div>${client.company}</div>` : ""}
     <div class="small">${client ? client.billingAddress : ""}</div>
     <div class="small">${client ? [client.phone, client.email].filter(Boolean).join(" | ") : ""}</div>
   </div>
   <div>
     <div class="small" style="font-weight:bold;text-transform:uppercase;">Job Site</div>
-    <div class="small">${(client && (client.propertyAddress || client.billingAddress)) || "â"}</div>
+    <div class="small">${(client && (client.propertyAddress || client.billingAddress)) || "\u2014"}</div>
   </div>
 </div>
 <table>
@@ -545,7 +545,7 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
 <div style="margin-top:16px;"><div class="small" style="font-weight:bold;text-transform:uppercase;">Terms &amp; Conditions</div><div class="terms">${editing.terms}</div></div>
 <div class="sig">
   <div><div class="sigline"></div><div class="small">Client Signature &nbsp;&nbsp;&nbsp;&nbsp; Date</div></div>
-  <div><div class="sigline"></div><div class="small">Authorized â ${settings.businessName}</div></div>
+  <div><div class="sigline"></div><div class="small">Authorized &#x2014; ${settings.businessName}</div></div>
 </div>
 <script>window.onload = function() { window.print(); };</script>
 </body></html>`;
@@ -553,7 +553,7 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
       // Robust print/export approach for a sandboxed iframe:
       // 1) Create a Blob URL for the standalone quote document
       // 2) Try window.open (may be blocked by the canvas sandbox)
-      // 3) ALWAYS render user-clickable <a> links via React state â
+      // 3) ALWAYS render user-clickable <a> links via React state -
       //    links the user clicks directly are far more likely to be
       //    permitted than programmatic window.open
       const blob = new Blob([html], { type: "text/html" });
@@ -575,8 +575,8 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
       <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl mx-auto">
         {/* Action bar */}
         <div className="flex gap-2 mb-6">
-          <button onClick={() => setPreview(false)} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300">â Back to Edit</button>
-          <button onClick={printQuote} className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700">ð¨ï¸ Print / Save PDF</button>
+          <button onClick={() => setPreview(false)} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300">&#x2190; Back to Edit</button>
+          <button onClick={printQuote} className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700">&#x1F5A8;&#xFE0F; Print / Save PDF</button>
         </div>
 
         {/* Export panel: sandboxed iframes block normal link clicks, but the
@@ -585,7 +585,7 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
         {exportUrl && (
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <p className="text-sm font-semibold text-gray-800 mb-1">
-              ð±ï¸ Right-click one of the links below (normal left-clicks are blocked in this view):
+              &#x1F5B1;&#xFE0F; Right-click one of the links below (normal left-clicks are blocked in this view):
             </p>
             <div className="flex gap-3 flex-wrap mb-3">
               <a
@@ -594,14 +594,14 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
                 rel="noopener"
                 className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
               >
-                ð Quote Document <span className="font-normal text-blue-100">â right-click, "Open link in new tab" (print starts automatically)</span>
+                &#x1F517; Quote Document <span className="font-normal text-blue-100">&#x2192; right-click, "Open link in new tab" (print starts automatically)</span>
               </a>
               <a
                 href={exportUrl}
                 download={`quote-${editing.quoteNumber || "draft"}.html`}
                 className="inline-block px-4 py-2 bg-gray-700 text-white rounded-lg font-semibold hover:bg-gray-800"
               >
-                â¬ï¸ Download <span className="font-normal text-gray-300">â right-click, "Save link as" to save the .html file</span>
+                &#x2B07;&#xFE0F; Download <span className="font-normal text-gray-300">&#x2192; right-click, "Save link as" to save the .html file</span>
               </a>
             </div>
             <p className="text-xs text-gray-500">
@@ -634,14 +634,14 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
         <div className="grid grid-cols-2 gap-6 mb-6">
           <div>
             <h3 className="text-sm font-bold text-gray-500 uppercase mb-1">Bill To</h3>
-            <p className="font-semibold text-gray-800">{client ? client.name : "â"}</p>
+            <p className="font-semibold text-gray-800">{client ? client.name : "\u2014"}</p>
             {client && client.company && <p className="text-sm text-gray-600">{client.company}</p>}
             {client && <p className="text-sm text-gray-600">{client.billingAddress}</p>}
             {client && <p className="text-sm text-gray-600">{[client.phone, client.email].filter(Boolean).join(" | ")}</p>}
           </div>
           <div>
             <h3 className="text-sm font-bold text-gray-500 uppercase mb-1">Job Site</h3>
-            <p className="text-sm text-gray-600">{(client && (client.propertyAddress || client.billingAddress)) || "â"}</p>
+            <p className="text-sm text-gray-600">{(client && (client.propertyAddress || client.billingAddress)) || "\u2014"}</p>
           </div>
         </div>
 
@@ -706,7 +706,7 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
             <p className="text-xs text-gray-500">Signature    Date</p>
           </div>
           <div>
-            <p className="text-xs text-gray-500 mb-6">Authorized â {settings.businessName}</p>
+            <p className="text-xs text-gray-500 mb-6">Authorized &#x2014; {settings.businessName}</p>
             <div className="border-b border-gray-800 mb-1"></div>
             <p className="text-xs text-gray-500">Signature    Date</p>
           </div>
@@ -720,20 +720,20 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
     return (
       <div className="space-y-6">
         <div className="flex gap-2 flex-wrap">
-          <button onClick={() => setEditing(null)} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300">â Back to Quotes</button>
-          <button onClick={handleSave} className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700">ð¾ Save Quote</button>
-          <button onClick={() => setPreview(true)} className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700">ðï¸ Preview Quote</button>
-          <button onClick={refreshAutoItems} className="px-4 py-2 bg-amber-500 text-white rounded-lg font-semibold hover:bg-amber-600">ð Refresh Pricing from Calculator</button>
+          <button onClick={() => setEditing(null)} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300">&#x2190; Back to Quotes</button>
+          <button onClick={handleSave} className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700">&#x1F4BE; Save Quote</button>
+          <button onClick={() => setPreview(true)} className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700">&#x1F441;&#xFE0F; Preview Quote</button>
+          <button onClick={refreshAutoItems} className="px-4 py-2 bg-amber-500 text-white rounded-lg font-semibold hover:bg-amber-600">&#x1F504; Refresh Pricing from Calculator</button>
         </div>
 
         {/* Quote header details */}
         <section className="bg-white rounded-xl shadow-md p-6">
-          <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">Quote Details {editing.quoteNumber && `â ${editing.quoteNumber}`}</h2>
+          <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">Quote Details {editing.quoteNumber && `\u2014 ${editing.quoteNumber}`}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Client *</label>
               <select name="clientId" value={editing.clientId} onChange={handleQuoteChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white">
-                <option value="">â Select a client â</option>
+                <option value="">&#x2014; Select a client &#x2014;</option>
                 {clients.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}{c.company ? ` (${c.company})` : ""}</option>
                 ))}
@@ -748,13 +748,13 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
               <input type="number" name="validDays" value={editing.validDays} onChange={handleQuoteChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
             </div>
               <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Pipeline Status <span className="font-normal text-gray-400">(quotes are saved regardless of status â this only tracks where it is in your sales process)</span></label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Pipeline Status <span className="font-normal text-gray-400">(quotes are saved regardless of status &#x2014; this only tracks where it is in your sales process)</span></label>
               <select name="status" value={editing.status} onChange={handleQuoteChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white">
-                <option value="draft">Draft â not yet sent to client</option>
-                <option value="sent">Sent â delivered to client</option>
-                <option value="approved">Approved â client accepted</option>
-                <option value="declined">Declined â client passed</option>
-                <option value="expired">Expired â validity window passed</option>
+                <option value="draft">Draft &#x2014; not yet sent to client</option>
+                <option value="sent">Sent &#x2014; delivered to client</option>
+                <option value="approved">Approved &#x2014; client accepted</option>
+                <option value="declined">Declined &#x2014; client passed</option>
+                <option value="expired">Expired &#x2014; validity window passed</option>
               </select>
             </div>
             <div>
@@ -817,14 +817,14 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
                     </td>
                     <td className="py-1.5 pr-2 text-right font-semibold">{formatCurrency(item.qty * item.rate)}</td>
                     <td className="py-1.5 text-right">
-                      <button onClick={() => removeLineItem(item.id)} className="text-red-500 hover:text-red-700 font-bold" title="Remove line">â</button>
+                      <button onClick={() => removeLineItem(item.id)} className="text-red-500 hover:text-red-700 font-bold" title="Remove line">&#x2715;</button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="text-xs text-gray-400 mt-2">Green rows auto-populate from the Calculator tab (pricing refresh button above). Cost column is internal only â never printed on the client quote.</p>
+          <p className="text-xs text-gray-400 mt-2">Green rows auto-populate from the Calculator tab (pricing refresh button above). Cost column is internal only &#x2014; never printed on the client quote.</p>
         </section>
 
         {/* Internal margin summary (not printed) */}
@@ -858,7 +858,7 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-green-700">ð Quotes ({quotes.length})</h2>
+        <h2 className="text-xl font-bold text-green-700">&#x1F4C4; Quotes ({quotes.length})</h2>
         <button onClick={handleNewQuote} className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700">
           + New Quote
         </button>
@@ -867,7 +867,7 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
       {quotes.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl shadow-md">
           <p className="text-gray-500 text-lg">No quotes yet.</p>
-          <p className="text-gray-400 mt-2">Create a quote â pricing is auto-populated from the Calculator tab.</p>
+          <p className="text-gray-400 mt-2">Create a quote &#x2014; pricing is auto-populated from the Calculator tab.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -881,7 +881,7 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
                   <h3 className="font-bold text-lg text-green-700">{quote.quoteNumber || "Draft"}</h3>
                   <span className={`text-xs px-2 py-1 rounded-full capitalize ${statusColors[quote.status] || "bg-gray-100"}`}>{quote.status}</span>
                 </div>
-                <p className="text-sm text-gray-600">Client: {c ? c.name : "â"}</p>
+                <p className="text-sm text-gray-600">Client: {c ? c.name : "\u2014"}</p>
                 <p className="text-sm text-gray-500">Dated: {quote.dateCreated}</p>
                 <p className="text-lg font-bold text-gray-800 mt-2">{formatCurrency(t.total)}</p>
                 {/* Quick status changer directly on the card */}
@@ -892,7 +892,7 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
                     onChange={(e) => handleStatusChange(quote.id, e.target.value)}
                     className="w-full px-2 py-1 border border-gray-300 rounded text-xs bg-white capitalize"
                   >
-                    <option value="draft">Draft â not yet sent</option>
+                    <option value="draft">Draft &#x2014; not yet sent</option>
                     <option value="sent">Sent</option>
                     <option value="approved">Approved</option>
                     <option value="declined">Declined</option>
@@ -919,3 +919,4 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
   window.ClientsPage = ClientsPage;
   window.QuotesPage = QuotesPage;
 })();
+// end of file
