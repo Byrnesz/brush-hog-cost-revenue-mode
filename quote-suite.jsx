@@ -918,4 +918,4 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
   window.SettingsPage = SettingsPage;
   window.ClientsPage = ClientsPage;
   window.QuotesPage = QuotesPage;
-})();).
+})(); ).
