@@ -144,12 +144,12 @@ const BrushHogCalculator = () => {
     // Variable costs scale directly with operating hours
     
     // Fuel consumption in gallons per hour
-    // Formula: Tractor HP Ã Fuel Consumption Factor (Gal/HP/Hour)
+    // Formula: Tractor HP * Fuel Consumption Factor (Gal/HP/Hour)
     // Based on standard diesel engine consumption rates
     const tractorFuelConsumption = state.tractorHP * state.fuelConsumptionFactor;
     
     // Hourly fuel cost
-    // Formula: Fuel Consumption Ã Fuel Price per Gallon
+    // Formula: Fuel Consumption * Fuel Price per Gallon
     // Direct cost of fuel for one hour of operation
     const hourlyFuelCost = tractorFuelConsumption * state.fuelPrice;
     
@@ -169,9 +169,9 @@ const BrushHogCalculator = () => {
     // Project-specific calculations based on job parameters
     
     // Cutter efficiency in acres per hour
-    // Formula: Cutter Width (feet) Ã 0.2
+    // Formula: Cutter Width (feet) * 0.2
     // Empirical factor: 5' cutter typically covers ~1 acre/hour
-    // For 5' cutter: 5 Ã 0.2 = 1.0 acres/hour
+    // For 5' cutter: 5 * 0.2 = 1.0 acres/hour
     const cutterEfficiency = state.cutterWidth * 0.2;
     
     // Project time in hours
@@ -180,12 +180,12 @@ const BrushHogCalculator = () => {
     const projectTime = state.projectSize / cutterEfficiency;
     
     // Total variable cost for the job
-    // Formula: Project Time Ã Variable Cost per Hour
+    // Formula: Project Time * Variable Cost per Hour
     // Direct variable costs (fuel, maintenance, labor) for this specific job
     const totalVariableCost = projectTime * totalVariableCostPerHour;
     
     // Fixed cost allocation for this job
-    // Formula: Fixed Cost per Hour Ã Project Time
+    // Formula: Fixed Cost per Hour * Project Time
     // Portion of annual fixed costs allocated to this specific job
     const fixedCostAllocation = fixedCostPerHour * projectTime;
     
@@ -197,13 +197,13 @@ const BrushHogCalculator = () => {
     // Income calculations based on billing method
     
     // Gross revenue if billing per acre
-    // Formula: Project Size Ã Rate per Acre
+    // Formula: Project Size * Rate per Acre
     // Standard billing method for larger, well-defined areas
     const grossRevenuePerAcre = state.projectSize * state.baseRatePerAcre;
     
     // Gross revenue if billing hourly
     // Uses maximum of actual time or minimum hours (for small jobs)
-    // Formula: max(Project Time, Minimum Hours) Ã Hourly Rate
+    // Formula: max(Project Time, Minimum Hours) * Hourly Rate
     // Ensures minimum charge is met even for quick jobs
     const grossRevenueHourly = Math.max(projectTime, state.minimumHours) * state.baseRatePerHour;
     
@@ -216,7 +216,7 @@ const BrushHogCalculator = () => {
     // Transportation-related metrics
     
     // Round-trip distance
-    // Formula: One-Way Distance Ã 2
+    // Formula: One-Way Distance * 2
     // Total distance traveled to and from the job site
     const roundTripDistance = state.travelDistance * 2;
     
@@ -242,18 +242,18 @@ const BrushHogCalculator = () => {
     const downTimeMultiplier = state.downTimeClauseActive ? state.downTimeHours : 0;
     
     // Adjusted hourly rate with risk multipliers
-    // Formula: Base Hourly Rate Ã Obstacle Multiplier Ã (1 + Down-Time Multiplier)
+    // Formula: Base Hourly Rate * Obstacle Multiplier * (1 + Down-Time Multiplier)
     // The (1 + downTimeMultiplier) allows for additional billing during delays
     // This ensures revenue covers non-productive time on difficult jobs
     const adjustedHourlyRate = state.baseRatePerHour * obstacleMultiplier * (1 + downTimeMultiplier);
     
     // Adjusted per-acre revenue with obstacle multiplier
-    // Formula: Gross Per-Acre Revenue Ã Obstacle Multiplier
+    // Formula: Gross Per-Acre Revenue * Obstacle Multiplier
     // Applies terrain difficulty multiplier to per-acre billing
     const adjustedRevenuePerAcre = grossRevenuePerAcre * obstacleMultiplier;
     
     // Adjusted hourly revenue with both multipliers
-    // Formula: Gross Hourly Revenue Ã Obstacle Multiplier Ã (1 + Down-Time Multiplier)
+    // Formula: Gross Hourly Revenue * Obstacle Multiplier * (1 + Down-Time Multiplier)
     // Applies both terrain and downtime multipliers to hourly billing
     const adjustedRevenueHourly = grossRevenueHourly * obstacleMultiplier * (1 + downTimeMultiplier);
 
@@ -275,7 +275,7 @@ const BrushHogCalculator = () => {
     const finalNetProfit = adjustedFinalRevenue + showUpFee - finalCost;
     
     // Profit margin as percentage
-    // Formula: (Net Profit / (Adjusted Revenue + Show-Up Fee)) Ã 100
+    // Formula: (Net Profit / (Adjusted Revenue + Show-Up Fee)) * 100
     // Returns 0 if finalRevenue is 0 to avoid division by zero
     // Standard business metric showing profitability as percentage of revenue
     const profitMargin = finalRevenue > 0 
@@ -519,7 +519,7 @@ const BrushHogCalculator = () => {
             {/* Title and subtitle - left side */}
             <div>
               <h1 className="text-2xl font-bold">
-                <span className="text-green-300">ð Brush Hog</span> Cost & Revenue Calculator
+                <span className="text-green-300">&#x1F69C; Brush Hog</span> Cost & Revenue Calculator
               </h1>
               <p className="text-green-200 text-sm mt-1">For 40HP Tractor + 5' Brush Hog | Real-time calculations</p>
             </div>
@@ -528,13 +528,13 @@ const BrushHogCalculator = () => {
             {/* Export, Save Scenario, and Reset buttons for quick actions */}
             <div className="flex gap-2 flex-wrap">
               <button onClick={exportToCSV} className="px-4 py-2 bg-white text-green-700 rounded-lg font-semibold hover:bg-green-50 shadow">
-                ð¥ Export CSV
+                &#x1F4E5; Export CSV
               </button>
               <button onClick={() => setShowSaveModal(true)} className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 shadow">
-                ð¾ Save Scenario
+                &#x1F4BE; Save Scenario
               </button>
               <button onClick={handleReset} className="px-4 py-2 bg-gray-600 text-white rounded-lg font-semibold hover:bg-gray-700 shadow">
-                ð Reset
+                &#x1F504; Reset
               </button>
             </div>
           </div>
@@ -554,7 +554,7 @@ const BrushHogCalculator = () => {
               activeTab === "inputs" ? "bg-green-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
-            âï¸ Inputs
+            &#x2699;&#xFE0F; Inputs
           </button>
           <button
             onClick={() => setActiveTab("results")}
@@ -562,7 +562,7 @@ const BrushHogCalculator = () => {
               activeTab === "results" ? "bg-green-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
-            ð Results
+            &#x1F4CA; Results
           </button>
           <button
             onClick={() => setActiveTab("scenarios")}
@@ -570,7 +570,7 @@ const BrushHogCalculator = () => {
               activeTab === "scenarios" ? "bg-green-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
-            ð¾ Scenarios
+            &#x1F4BE; Scenarios
           </button>
         </nav>
 
@@ -582,7 +582,7 @@ const BrushHogCalculator = () => {
             {/* FIXED COSTS SECTION */}
             {/* Annual expenses that don't scale with usage */}
             <section className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">ð° Fixed Costs (Annual)</h2>
+              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">&#x1F4B0; Fixed Costs (Annual)</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Equipment Purchase Price input */}
                 <div>
@@ -676,7 +676,7 @@ const BrushHogCalculator = () => {
             {/* VARIABLE COSTS SECTION */}
             {/* Per-hour expenses that scale with operating time */}
             <section className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">âï¸ Variable Operating Costs (Per Hour)</h2>
+              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">&#x2699;&#xFE0F; Variable Operating Costs (Per Hour)</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Tractor HP input */}
                 <div>
@@ -769,7 +769,7 @@ const BrushHogCalculator = () => {
             {/* JOB SIMULATOR SECTION */}
             {/* Parameters for simulating specific mowing jobs */}
             <section className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">ð Job Simulator</h2>
+              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">&#x1F4C8; Job Simulator</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Project Size input */}
                 <div>
@@ -847,7 +847,7 @@ const BrushHogCalculator = () => {
             {/* TRAVEL ADJUSTMENTS SECTION */}
             {/* Transportation and mobilization parameters */}
             <section className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">ð Travel Adjustments</h2>
+              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">&#x1F69A; Travel Adjustments</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Travel Distance input with show-up fee guide */}
                 <div>
@@ -868,7 +868,7 @@ const BrushHogCalculator = () => {
             {/* RISK RULES SECTION */}
             {/* Adjustments for difficult conditions and project risks */}
             <section className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">â ï¸ Risk Rules & Adjustments</h2>
+              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">&#x26A0;&#xFE0F; Risk Rules & Adjustments</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Terrain Type dropdown with multipliers */}
                 <div>
@@ -926,7 +926,7 @@ const BrushHogCalculator = () => {
             {/* FINAL SUMMARY SECTION */}
             {/* High-level financial overview with key metrics */}
             <section className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">ð Final Summary</h2>
+              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">&#x1F4CC; Final Summary</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {/* Final Revenue Card - green theme */}
                 <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 text-center">
@@ -961,7 +961,7 @@ const BrushHogCalculator = () => {
             {/* FIXED COSTS RESULTS SECTION */}
             {/* Annual fixed cost calculations */}
             <section className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">ð° Fixed Costs (Annual)</h2>
+              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">&#x1F4B0; Fixed Costs (Annual)</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-semibold text-gray-700">Annual Depreciation</span>
@@ -981,7 +981,7 @@ const BrushHogCalculator = () => {
             {/* VARIABLE COSTS RESULTS SECTION */}
             {/* Per-hour variable cost calculations */}
             <section className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">âï¸ Variable Operating Costs (Per Hour)</h2>
+              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">&#x2699;&#xFE0F; Variable Operating Costs (Per Hour)</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-semibold text-gray-700">Fuel Consumption</span>
@@ -1005,7 +1005,7 @@ const BrushHogCalculator = () => {
             {/* JOB CALCULATIONS RESULTS SECTION */}
             {/* Project-specific calculations */}
             <section className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">ð Job Calculations</h2>
+              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">&#x1F4C8; Job Calculations</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-semibold text-gray-700">Cutter Efficiency</span>
@@ -1048,7 +1048,7 @@ const BrushHogCalculator = () => {
             {/* TRAVEL RESULTS SECTION */}
             {/* Transportation-related calculations */}
             <section className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">ð Travel Adjustments</h2>
+              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">&#x1F69A; Travel Adjustments</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-semibold text-gray-700">Round-Trip Distance</span>
@@ -1068,7 +1068,7 @@ const BrushHogCalculator = () => {
             {/* RISK RULES RESULTS SECTION */}
             {/* Risk-adjusted calculations */}
             <section className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">â ï¸ Risk Rules & Adjustments</h2>
+              <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">&#x26A0;&#xFE0F; Risk Rules & Adjustments</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-semibold text-gray-700">Obstacle Multiplier</span>
@@ -1092,13 +1092,13 @@ const BrushHogCalculator = () => {
             {/* HOW IT WORKS SECTION */}
             {/* Explanation of calculation methodology */}
             <section className="bg-blue-50 rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-bold text-blue-700 mb-4">ð How It Works</h2>
+              <h2 className="text-xl font-bold text-blue-700 mb-4">&#x1F4DD; How It Works</h2>
               <ul className="list-disc list-inside space-y-2 text-blue-800">
-                <li><strong>Auto-Selection:</strong> The calculator automatically uses <strong>per-acre billing</strong> for jobs â¥ 2 acres, and <strong>hourly billing</strong> for smaller jobs.</li>
+                <li><strong>Auto-Selection:</strong> The calculator automatically uses <strong>per-acre billing</strong> for jobs &#x2265; 2 acres, and <strong>hourly billing</strong> for smaller jobs.</li>
                 <li><strong>Risk Multipliers:</strong> Terrain type applies a multiplier to your revenue (Open Field=1.0x, Slopes=1.2x, Thick Brush=1.5x, Rocks=1.8x).</li>
                 <li><strong>Down-Time Clause:</strong> When enabled, billing continues during delays, increasing your effective hourly rate.</li>
                 <li><strong>Show-Up Fee:</strong> Automatically added based on travel distance (5mi=$175, 10mi=$200, 15mi=$225, 20mi+=$250).</li>
-                <li><strong>Profit Margin:</strong> Calculated as (Net Profit / Final Revenue) Ã 100.</li>
+                <li><strong>Profit Margin:</strong> Calculated as (Net Profit / Final Revenue) &#xD7; 100.</li>
               </ul>
             </section>
           </div>
@@ -1110,7 +1110,7 @@ const BrushHogCalculator = () => {
           <div className="space-y-6">
             <section className="bg-white rounded-xl shadow-md p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold text-green-700 border-b-2 border-green-200 pb-2">ð¾ Saved Scenarios</h2>
+                <h2 className="text-xl font-bold text-green-700 border-b-2 border-green-200 pb-2">&#x1F4BE; Saved Scenarios</h2>
                 <button onClick={() => setShowSaveModal(true)} className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors">
                   + New Scenario
                 </button>
@@ -1236,3 +1236,4 @@ const BrushHogCalculator = () => {
   window.formatNumber = formatNumber;
   window.defaultState = defaultState;
 })();
+// end of file
