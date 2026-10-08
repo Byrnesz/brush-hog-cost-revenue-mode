@@ -1,4 +1,4 @@
-# Brush Hog Business Suite
+# Brush Hog (Rotary Cutter) Business Suite
 
 A browser-based business suite for Brush Hog (rotary cutter) mowing operations. Built for a **40HP tractor with a 5' brush hog cutter**, but adaptable to any equipment configuration.
 
