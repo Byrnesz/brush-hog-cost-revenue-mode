@@ -1,125 +1,91 @@
-# Brush Hog (Rotary Cutter) Mowing Cost and Revenue Model
+# Brush Hog Business Suite
 
-A comprehensive financial model for calculating costs, revenue, and profitability for Brush Hog (Rotary Cutter) mowing operations. This model is specifically customized for a **40HP tractor with a 5' brush hog cutter**, but can be easily adapted for any equipment configuration.
+A browser-based business suite for Brush Hog (rotary cutter) mowing operations. Built for a **40HP tractor with a 5' brush hog cutter**, but adaptable to any equipment configuration.
 
-## ✨ Features
+> Originally a static spreadsheet-style calculator; now a full React app with quoting, client management, and business settings.
 
-- **Fixed Cost Calculations**: Annual depreciation, insurance, and overhead
-- **Variable Cost Tracking**: Fuel, maintenance, and labor per hour
-- **Dual Quoting System**: Auto-switches between per-acre and hourly billing
-- **Risk Management**: Obstacle multipliers, down-time clauses, and mobilization fees
-- **Travel Adjustments**: Scaling show-up fees for 5-20 mile radii
-- **Interactive HTML**: Beautiful, responsive web interface via GitHub Pages
+## Live Site
 
-## 🚀 Quick Start
+**https://byrnesz.github.io/brush-hog-cost-revenue-mode/**
 
-### Option 1: Use the Web Interface
-1. Visit the live site: [https://[YOUR_USERNAME].github.io/brush-hog-cost-revenue-model/](https://[YOUR_USERNAME].github.io/brush-hog-cost-revenue-model/)
-2. Copy the spreadsheet table into Excel or Google Sheets
-3. Customize the highlighted inputs with your actual numbers
+## Features
 
-### Option 2: Download and Use Locally
-1. Clone this repository
-2. Open `index.html` in your browser
-3. Copy the spreadsheet to your preferred spreadsheet software
+### Calculator
+- **Fixed cost model**: annual depreciation, insurance, and overhead
+- **Variable cost tracking**: fuel, maintenance, and labor per hour
+- **Dual quoting engine**: auto-switches between per-acre and hourly billing
+- **Risk management**: terrain multipliers (1.0-1.8x), mobilization (show-up) fees scaled for 5-20 mile travel, down-time clause, 2-hour minimum
+- **Scenario comparison**: save and compare up to multiple job scenarios
+- **CSV / clipboard export**: copy the model into Excel or Google Sheets
 
-## 📊 Spreadsheet Model
+### Clients
+- Client directory with contact details and job history
+- Persisted locally in your browser (no server, no accounts)
 
-The model includes:
+### Quotes
+- Professional quote builder with auto-generated line items
+- Auto-numbered quotes (sequential) with status tracking
+- Auto-imports calculated pricing from the Calculator module
+- Print / PDF-ready quote layout via your browser's print dialog
 
-### Fixed Costs (Annual)
-- Equipment purchase price and depreciation
-- Commercial insurance and licensing
-- Business administration and marketing
+### Settings
+- Customizable business profile: name, rates, terms, tax settings
+- Default values flow into new quotes and the calculator
 
-### Variable Costs (Per Hour)
-- Fuel consumption based on tractor HP
-- Maintenance allocation for blades, pins, lubricants
-- Operator labor rates
-- Equipment wear factor for brush hogging
+## How It Works
 
-### Job Simulator
-- Project size and cutter efficiency
-- Total project time calculation
-- Variable and fixed cost allocation
+- Per-acre quoting for jobs >= 2 acres
+- Hourly quoting with minimum charge for small lots (< 2 acres)
+- Show-up fee scales with travel distance (5mi=$175, 10mi=$200, 15mi=$225, 20mi=$250)
+- Fuel consumption: Tractor HP x 0.044 Gal/HP/Hour
+- Annual depreciation: (Purchase Price - Salvage Value) / Useful Life
 
-### Pricing Models
-- Per-acre quoting for larger jobs
-- Hourly quoting with minimum charge for small lots (<2 acres)
-- Automatic switching between models
+All data is stored in your browser's localStorage (keys: `brushHogState`, `brushHogScenarios`, `brushHogClients`, `brushHogQuotes`, `brushHogSettings`). Clearing site data resets everything, so use the in-app export features to keep backups.
 
-### Risk Rules
-- **Mobilization Fee**: Flat show-up fee scaling with distance (5-20 miles)
-- **Obstacle Multiplier**: Adjusts revenue for terrain difficulty (1.0-1.8x)
-- **Down-Time Clause**: Hourly billing continues during delays
-- **Minimum Charge**: 2-hour minimum for small jobs
+## Example Scenarios
 
-### Travel Adjustments
-- Distance-based show-up fees
-- Round-trip travel time calculation
-- Integration with revenue calculations
+| Scenario | Size | Distance | Terrain | Revenue | Cost | Profit | Margin |
+|----------|------|----------|---------|---------|------|--------|--------|
+| Open Field | 5 acres | 5 mi | Open Field | $775 | $320 | $455 | 58.7% |
+| Thick Brush | 2 acres | 10 mi | Thick Brush | $420 | $240 | $180 | 42.9% |
+| Small Lot | 1 acre | 5 mi | Open Field | $275 | $175 | $100 | 36.4% |
+| Rocky Terrain | 3 acres | 15 mi | Rocks | $705 | $400 | $305 | 43.3% |
 
-## 🎯 Example Scenarios
+## Tech Stack
 
-| Scenario | Project Size | Travel Distance | Terrain | Revenue | Cost | Profit | Margin |
-|----------|--------------|-----------------|---------|---------|------|--------|--------|
-| Open Field | 5 Acres | 5 Miles | Open Field | $775 | $320 | $455 | 58.7% |
-| Thick Brush | 2 Acres | 10 Miles | Thick Brush | $420 | $240 | $180 | 42.9% |
-| Small Lot | 1 Acre | 5 Miles | Open Field | $275 | $175 | $100 | 36.4% |
-| Rocky Terrain | 3 Acres | 15 Miles | Rocks | $705 | $400 | $305 | 43.3% |
+- **React 18** (UMD build, no bundler) + **Babel Standalone** for in-browser JSX
+- **Tailwind CSS** via CDN
+- Plain static files - served straight from GitHub Pages, no build step required
 
-## 📥 How to Use
+## Repository Structure
 
-1. **Copy the spreadsheet table** from `index.html` into Excel or Google Sheets
-2. **Replace highlighted values** (green cells) with your actual numbers:
-   - Equipment purchase price
-   - Fuel price
-   - Labor rate
-   - Project size
-   - Travel distance
-   - Terrain type
-3. **All formulas auto-calculate** - no manual math needed!
-4. **Test different scenarios** by adjusting inputs
+```
+index.html        Entry point: loads React, Babel, and the app scripts
+styles.css        Base styles + print layout for quotes
+calculator.jsx    Calculator module + shared helpers (formatters, terrain rates, fees)
+quote-suite.jsx   Clients, Quotes, and Settings modules + persistent-state hook
+app.jsx           Top-level navigation shell and React mount
+deploy.yml        GitHub Actions workflow for Pages deployment
+```
 
-## 🔧 Customization
+Scripts load in that order; shared code is passed between modules via `window`.
 
-To adapt this model for your specific setup:
+## Development
 
-1. **Change Tractor HP**: Update cell B13 with your tractor's horsepower
-2. **Change Cutter Width**: Update cell B24 with your cutter width in feet
-3. **Adjust Rates**: Modify the base rates in cells B30 (per acre) and B31 (per hour)
-4. **Customize Risk Rules**: Adjust the obstacle multipliers in the formula
-5. **Modify Travel Fees**: Edit the show-up fee formula to match your pricing
+No install needed: open `index.html` in a browser (any local static server works, e.g. `python -m http.server`). Edit the `.jsx` files and refresh. Deployment is automatic on push to `main` via the included workflow.
 
-## 📊 Formulas Explained
-
-### Key Calculations
-
-- **Annual Depreciation**: `(Purchase Price - Salvage Value) / Useful Life`
-- **Fuel Consumption**: `Tractor HP × 0.044 Gal/HP/Hour`
-- **Hourly Fuel Cost**: `Fuel Consumption × Fuel Price`
-- **Project Time**: `Project Size (Acres) / Cutter Efficiency (Acres/Hour)`
-- **Obstacle Multiplier**: Dynamic adjustment based on terrain type
-- **Show-Up Fee**: Scales with distance (5mi=$175, 10mi=$200, 15mi=$225, 20mi=$250)
-
-### Revenue Selection
-
-The model automatically selects the appropriate billing method:
-- **Per-Acre**: For jobs ≥ 2 acres
-- **Hourly**: For jobs < 2 acres (with minimum charge)
-
-## 🔗 Resources
+## Resources
 
 - [Iowa State University Farm Machinery Cost Calculator](https://www.extension.iastate.edu/agdm/crops/html/a3-29.html)
 - [USDA Equipment Cost Resources](https://www.nrcs.usda.gov/wps/portal/nrcs/detail/national/newsroom/features/?cid=nrcseprd1367244)
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request with any improvements or additional features.
+Contributions are welcome! Please feel free to submit a Pull Request with any improvements.
 
-## 📜 License
+## License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is open source and available under the MIT License (LICENSE).
 
 ---
 
