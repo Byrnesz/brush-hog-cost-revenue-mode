@@ -20,12 +20,12 @@ function App() {
       {/* Module navigation bar - sits above the calculator's own header */}
       <nav className="bg-gray-900 text-white shadow-lg print:hidden">
         <div className="container mx-auto px-4 py-2 flex gap-2 flex-wrap items-center">
-          <span className="font-bold text-green-400 mr-4">Brush Hog Business Suite</span>
+          <span className="font-bold text-green-400 mr-4">&#x1F69C; Brush Hog Business Suite</span>
           {[
-            { key: "calculator", label: "Calculator" },
-            { key: "clients", label: "Clients" },
-            { key: "quotes", label: "Quotes" },
-            { key: "settings", label: "Settings" },
+            { key: "calculator", label: "\uD83E\uDDEE Calculator" },
+            { key: "clients", label: "\uD83D\uDC65 Clients" },
+            { key: "quotes", label: "\uD83D\uDCC4 Quotes" },
+            { key: "settings", label: "\u2699\uFE0F Settings" },
           ].map(({ key, label }) => (
             <button
               key={key}
