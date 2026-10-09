@@ -74,9 +74,11 @@ A series of changes aimed at making the tool usable by people other than the own
 
 ## Open Items / Roadmap
 
-1. **Requirements backlog (28-item questionnaire).** A structured requirements questionnaire (quote numbering, payment terms, rates, and other business rules) is being answered by the owner. Some items are already handled by the app: quote numbering (pre-assigned at creation), payment terms and default terms (Settings), and base rates and terrain multipliers (Calculator). The remaining answers will drive the next round of development.
+See also: [GitHub Issues](https://github.com/Byrnesz/brush-hog-cost-revenue-mode/issues)
 
-2. **Google Calendar job scheduling.** Planned next feature: schedule quoted/approved jobs onto the owner's calendar. His Google calendars are already connected on this platform (including a "DAILY LOGS" calendar).
+1. **Requirements backlog (28-item questionnaire).** A structured requirements questionnaire (quote numbering, payment terms, rates, and other business rules) is being answered by the owner. Some items are already handled by the app: quote numbering (pre-assigned at creation), payment terms and default terms (Settings), and base rates and terrain multipliers (Calculator). The remaining answers will drive the next round of development.  ([#1](https://github.com/Byrnesz/brush-hog-cost-revenue-mode/issues/1))
+
+2. **Google Calendar job scheduling.** Planned next feature: schedule quoted/approved jobs onto the owner's calendar. His Google calendars are already connected on this platform (including a "DAILY LOGS" calendar).  ([#2](https://github.com/Byrnesz/brush-hog-cost-revenue-mode/issues/2))
 
 3. **Backup import/restore.** Exports exist; import does not. Deliberately deferred until the data model stabilizes - building import against a schema still in flux is wasted work.
 
