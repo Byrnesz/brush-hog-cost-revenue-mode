@@ -65,7 +65,7 @@ const blankLineItem = () => ({
 // Blank quote template - populated when creating a new quote
 const blankQuote = () => ({
   id: uid(),
-  quoteNumber: "",   // Auto-generated when saved
+  quoteNumber: "",   // Pre-assigned when a new quote is created
   clientId: "",
   dateCreated: new Date().toISOString().slice(0, 10),
   validDays: 30,     // Quote validity period
@@ -451,6 +451,10 @@ const QuotesPage = ({ quotes, setQuotes, clients, settings }) => {
   // Start a new quote, auto-populated from calculator data and business settings
   const handleNewQuote = () => {
     const q = blankQuote();
+    // Pre-assign the quote number so it is visible in the editor, preview,
+    // and printed document even before the quote is saved. The number is
+    // derived from saved quotes only, so abandoned drafts never leave gaps.
+    q.quoteNumber = nextQuoteNumber(quotes);
     q.items = buildAutoItems();
     q.taxRate = settings.taxRate || 0;
     q.validDays = settings.validDays || 30;
