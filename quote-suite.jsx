@@ -104,6 +104,53 @@ const SettingsPage = ({ settings, setSettings }) => {
     setSettings((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Logo upload: read the file, downscale it, and store as a base64 data URL.
+  // Kept small (max 300px wide) so it fits comfortably in localStorage and
+  // embeds cleanly in the printed quote document.
+  const handleLogoUpload = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file (PNG, JPG, GIF, WEBP, SVG).");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image is too large. Please choose a file under 5 MB.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const MAX_WIDTH = 300;
+          let w = img.width;
+          let h = img.height;
+          if (w > MAX_WIDTH) {
+            h = Math.round((h * MAX_WIDTH) / w);
+            w = MAX_WIDTH;
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          // PNG preserves transparency for typical logo files
+          const dataUrl = canvas.toDataURL("image/png");
+          setSettings((prev) => ({ ...prev, logoDataUrl: dataUrl }));
+        } catch (err) {
+          alert("Could not process that image. Try a PNG or JPG file.");
+        }
+      };
+      img.onerror = () => alert("Could not load that image file.");
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+    // Allow re-selecting the same file later
+    e.target.value = "";
+  };
+
+  const removeLogo = () => setSettings((prev) => ({ ...prev, logoDataUrl: "" }));
+
   return (
     <div className="space-y-6">
       <section className="bg-white rounded-xl shadow-md p-6">
@@ -133,10 +180,25 @@ const SettingsPage = ({ settings, setSettings }) => {
             <label className="block text-sm font-semibold text-gray-700 mb-1">Website</label>
             <input type="text" name="website" value={settings.website} onChange={handleChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
           </div>
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Logo (base64 data URL)</label>
-            <input type="text" name="logoDataUrl" value={settings.logoDataUrl} onChange={handleChange} placeholder="data:image/png;base64,..." className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs" />
-            <p className="text-xs text-gray-500 mt-1">Paste a base64-encoded image URL. Image upload can be added later.</p>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Logo</label>
+            <div className="flex items-center gap-4 flex-wrap">
+              {settings.logoDataUrl ? (
+                <img src={settings.logoDataUrl} alt="Logo preview" className="h-16 object-contain border border-gray-200 rounded-lg p-1 bg-white" />
+              ) : (
+                <div className="h-16 w-24 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-xs">No logo</div>
+              )}
+              <label className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold cursor-pointer hover:bg-green-700">
+                Upload Image
+                <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
+              </label>
+              {settings.logoDataUrl && (
+                <button type="button" onClick={removeLogo} className="px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600">
+                  Remove
+                </button>
+              )}
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Shown at the top of every printed quote. Images are automatically resized for compact storage.</p>
           </div>
         </div>
       </section>
