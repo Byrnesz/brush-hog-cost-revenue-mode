@@ -151,6 +151,151 @@ const SettingsPage = ({ settings, setSettings }) => {
 
   const removeLogo = () => setSettings((prev) => ({ ...prev, logoDataUrl: "" }));
 
+  // ---------- DATA EXPORT HELPERS ----------
+  // All exports read straight from localStorage so this section can live in
+  // Settings without needing new props from the app shell.
+  const readStore = (key, fallback) => {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) {
+      return fallback;
+    }
+  };
+
+  // Download any text payload as a file via a temporary anchor click
+  const downloadFile = (filename, content, mime) => {
+    const blob = new Blob([content], { type: mime || "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+
+  // CSV: quote cells, double embedded quotes, CRLF line endings (Excel-friendly)
+  const toCsv = (rows) =>
+    rows
+      .map((r) =>
+        r
+          .map((cell) => {
+            const s = cell === null || cell === undefined ? "" : String(cell);
+            return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+          })
+          .join(",")
+      )
+      .join("\r\n");
+
+  const exportJsonBackup = () => {
+    const payload = {
+      app: "Brush Hog Business Suite",
+      exportedAt: new Date().toISOString(),
+      data: {
+        baseline: readStore("brushHogState", null),
+        scenarios: readStore("brushHogScenarios", []),
+        clients: readStore("brushHogClients", []),
+        quotes: readStore("brushHogQuotes", []),
+        settings: readStore("brushHogSettings", null),
+      },
+    };
+    downloadFile(
+      "brush-hog-backup-" + new Date().toISOString().slice(0, 10) + ".json",
+      JSON.stringify(payload, null, 2),
+      "application/json"
+    );
+  };
+
+  const exportQuotesCsv = () => {
+    const quotes = readStore("brushHogQuotes", []);
+    const clients = readStore("brushHogClients", []);
+    const clientById = {};
+    clients.forEach((c) => { clientById[c.id] = c; });
+    const rows = [
+      ["Quote Number", "Date Created", "Valid Until", "Status", "Client", "Client Company", "Client Email", "Line Items", "Subtotal", "Discount", "Tax Rate %", "Tax", "Total", "Notes", "Terms"]
+    ];
+    quotes.forEach((q) => {
+      const c = clientById[q.clientId] || {};
+      const subtotal = (q.items || []).reduce((sum, it) => sum + (Number(it.qty) || 0) * (Number(it.rate) || 0), 0);
+      const discount = Number(q.discount) || 0;
+      const taxRate = Number(q.taxRate) || 0;
+      const tax = ((subtotal - discount) * taxRate) / 100;
+      const total = subtotal - discount + tax;
+      const validUntil = q.dateCreated && q.validDays
+        ? new Date(new Date(q.dateCreated).getTime() + q.validDays * 86400000).toISOString().slice(0, 10)
+        : "";
+      rows.push([
+        q.quoteNumber || "", q.dateCreated || "", validUntil, q.status || "",
+        c.name || "", c.company || "", c.email || "",
+        (q.items || []).length,
+        subtotal.toFixed(2), discount.toFixed(2), taxRate, tax.toFixed(2), total.toFixed(2),
+        q.notes || "", q.terms || "",
+      ]);
+    });
+    downloadFile("brush-hog-quotes-" + new Date().toISOString().slice(0, 10) + ".csv", toCsv(rows), "text/csv");
+  };
+
+  const exportQuoteItemsCsv = () => {
+    const quotes = readStore("brushHogQuotes", []);
+    const clients = readStore("brushHogClients", []);
+    const clientById = {};
+    clients.forEach((c) => { clientById[c.id] = c; });
+    const rows = [
+      ["Quote Number", "Date", "Status", "Client", "Item Description", "Part Number", "Part Description", "Qty", "Rate", "Internal Cost", "Line Total"]
+    ];
+    quotes.forEach((q) => {
+      const c = clientById[q.clientId] || {};
+      (q.items || []).forEach((it) => {
+        rows.push([
+          q.quoteNumber || "", q.dateCreated || "", q.status || "", c.name || "",
+          it.description || "", it.partNumber || "", it.partDescription || "",
+          it.qty, it.rate, it.cost !== undefined ? it.cost : "",
+          ((Number(it.qty) || 0) * (Number(it.rate) || 0)).toFixed(2),
+        ]);
+      });
+    });
+    downloadFile("brush-hog-quote-line-items-" + new Date().toISOString().slice(0, 10) + ".csv", toCsv(rows), "text/csv");
+  };
+
+  const exportClientsCsv = () => {
+    const clients = readStore("brushHogClients", []);
+    const rows = [["ID", "Name", "Company", "Email", "Phone", "Billing Address", "Property Address", "Notes", "Created At"]];
+    clients.forEach((c) => {
+      rows.push([c.id, c.name, c.company, c.email, c.phone, c.billingAddress, c.propertyAddress, c.notes, c.createdAt]);
+    });
+    downloadFile("brush-hog-clients-" + new Date().toISOString().slice(0, 10) + ".csv", toCsv(rows), "text/csv");
+  };
+
+  const exportScenariosCsv = () => {
+    const scenarios = readStore("brushHogScenarios", []);
+    // Flatten each scenario's state snapshot into columns (robust to future fields)
+    const stateKeys = [];
+    scenarios.forEach((s) => {
+      Object.keys(s.state || {}).forEach((k) => { if (!stateKeys.includes(k)) stateKeys.push(k); });
+    });
+    const rows = [["ID", "Name", "Created At", ...stateKeys]];
+    scenarios.forEach((s) => {
+      rows.push([s.id, s.name, s.createdAt, ...stateKeys.map((k) => (s.state || {})[k])]);
+    });
+    downloadFile("brush-hog-scenarios-" + new Date().toISOString().slice(0, 10) + ".csv", toCsv(rows), "text/csv");
+  };
+
+  const exportBaselineCsv = () => {
+    const state = readStore("brushHogState", {});
+    const rows = [["Field", "Value"]];
+    Object.keys(state).forEach((k) => { rows.push([k, state[k]]); });
+    downloadFile("brush-hog-baseline-" + new Date().toISOString().slice(0, 10) + ".csv", toCsv(rows), "text/csv");
+  };
+
+  const exportCounts = () => ({
+    quotes: readStore("brushHogQuotes", []).length,
+    items: readStore("brushHogQuotes", []).reduce((n, q) => n + (q.items || []).length, 0),
+    clients: readStore("brushHogClients", []).length,
+    scenarios: readStore("brushHogScenarios", []).length,
+  });
+
   return (
     <div className="space-y-6">
       <section className="bg-white rounded-xl shadow-md p-6">
@@ -224,6 +369,46 @@ const SettingsPage = ({ settings, setSettings }) => {
           <textarea name="termsConditions" value={settings.termsConditions} onChange={handleChange} rows="8" placeholder="Payment terms, cancellation policy, weather delays, liability, warranty..." className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
           <p className="text-xs text-gray-500 mt-1">This text will be pre-filled on every new quote and fully editable per quote.</p>
         </div>
+      </section>
+
+      <section className="bg-white rounded-xl shadow-md p-6">
+        <h2 className="text-xl font-bold text-green-700 mb-6 border-b-2 border-green-200 pb-2">&#x1F4E6; Data Export &amp; Backup</h2>
+        <p className="text-sm text-gray-600 mb-4">
+          Download your data for safekeeping and analysis. The JSON backup captures everything
+          (baseline, scenarios, clients, quotes, and settings) in one restorable file.
+          CSV files open directly in Excel or Google Sheets.
+        </p>
+        {(() => {
+          const counts = exportCounts();
+          const btn = "px-4 py-2 rounded-lg font-semibold text-white hover:opacity-90";
+          return (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <button onClick={exportJsonBackup} className={`${btn} bg-green-700 md:col-span-2`}>
+                &#x2B07;&#xFE0F; Download Full Backup (JSON) &#x2014; everything in one file
+              </button>
+              <button onClick={exportQuotesCsv} className={`${btn} bg-blue-600`}>
+                Quotes CSV ({counts.quotes} quotes)
+              </button>
+              <button onClick={exportQuoteItemsCsv} className={`${btn} bg-blue-500`}>
+                Quote Line Items CSV ({counts.items} items)
+              </button>
+              <button onClick={exportClientsCsv} className={`${btn} bg-purple-600`}>
+                Clients CSV ({counts.clients} clients)
+              </button>
+              <button onClick={exportScenariosCsv} className={`${btn} bg-amber-600`}>
+                Scenarios CSV ({counts.scenarios} scenarios)
+              </button>
+              <button onClick={exportBaselineCsv} className={`${btn} bg-gray-700 md:col-span-2`}>
+                Baseline Calculator CSV (current inputs)
+              </button>
+            </div>
+          );
+        })()}
+        <p className="text-xs text-gray-500 mt-4">
+          Tip: take a JSON backup regularly while you are developing the business - it is a complete
+          snapshot that can be restored later. Data lives only in this browser, so a backup is your
+          only protection against clearing site data or switching computers.
+        </p>
       </section>
     </div>
   );
